@@ -5,6 +5,6 @@ resource "aws_instance" "example" {
   key_name      = "PECOS-devtools"
   tags {
     "ChargeCode" = "C3001.002.001"
-    "Name"       = "Neil's CDC test instance 1"
+    "Name"       = "CDC test instance 1"
   }
 }
