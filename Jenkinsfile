@@ -8,7 +8,7 @@ node("master"){
 		
 		sh "ls -lhr"
 		echo env.GIT_URL
-		sh "cat $PEMKEY"
+		sh 'cat ${env.PEMKEY}'
 		sh("git tag -a some_tag -m 'Jenkins'")
 		sh('git push '+env.GIT_URL+' --tags')
 	}
