@@ -8,10 +8,8 @@ node("master"){
 		
 		sh "ls -lhr"
 		echo env.GIT_URL
-		sh('git config user.name "Jenkins"')
-		sh('git config user.name "Neil.Hunt@aquilent.com"')
-		sh("git tag -a some_tag -m 'Jenkins'")
-		sh('git push '+env.GIT_URL+' --tags')
+		sh('git -c "user.name=Jenkins" -c "user.email=Neil.Hunt@aquilent.com" tag -a some_tag -m "Jenkins"')
+		sh('git -c "user.name=Jenkins" -c "user.email=Neil.Hunt@aquilent.com" push '+env.GIT_URL+' --tags')
 	}
 }
 input "Proceed with plan execution?"
