@@ -4,13 +4,13 @@ stage 'Provision DEV AWS Stack'
 node("master"){
 	checkout scm
 	sh "terraform plan"
+	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" add terraform.tfstate')
+	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" commit -m "Jenkins"')
+	pushGit()
 }
 input "Proceed with plan execution?"
 node("master"){
 	sh "terraform apply"
-	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" add terraform.tfstate')
-	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" commit -m "Jenkins"')
-	pushGit()
 	//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
 }
 
