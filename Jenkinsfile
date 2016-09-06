@@ -26,7 +26,7 @@ stage 'Provision PROD AWS Stack'{
 
 def pushGit(){
 	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'PEMKEY']]) {
-		sh 'rm -rf id_rsa' //make sure it's removed
+		sh 'rm -rf ~/.ssh/id_rsa' //make sure it's removed
 		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
 		sh 'chmod 400 ~/.ssh/id_rsa'
 		sh 'ls -lhr'
