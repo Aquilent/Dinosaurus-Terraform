@@ -8,7 +8,6 @@ node("master"){
 		
 		sh "ls -lhr"
 		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
-		sh 'cat ~/.ssh/id_rsa'
 		echo env.GIT_URL
 		sh('git -c "user.name=Jenkins" -c "user.email=Neil.Hunt@aquilent.com" tag -a some_tag -m "Jenkins"')
 		sh('git -c "user.name=Jenkins" -c "user.email=Neil.Hunt@aquilent.com" push '+env.GIT_URL+' --tags')
