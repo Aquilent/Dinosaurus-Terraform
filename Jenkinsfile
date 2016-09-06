@@ -20,11 +20,12 @@ stage 'Provision PROD AWS Stack'{
 	}
 }
 
-
 def pushGit(){
 	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'PEMKEY']]) {
+		sh 'rm -rf ~/.ssh/id_rsa'
 		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
 		sh 'chmod 400 ~/.ssh/id_rsa'
 		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' --tags')
+		sh 'rm -rf ~/.ssh/id_rsa'
 	}
 }
