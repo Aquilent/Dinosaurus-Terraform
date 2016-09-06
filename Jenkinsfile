@@ -8,9 +8,8 @@ node("master"){
 		
 		sh "ls -lhr"
 		echo env.GIT_URL
-		writeFile file: '~/.gitconfig', text: '''[user]
-        name = Jenkins
-        email = Neil.Hunt@aquilent.com'''
+		sh('git config user.name "Jenkins"')
+		sh('git config user.name "Neil.Hunt@aquilent.com"')
 		sh("git tag -a some_tag -m 'Jenkins'")
 		sh('git push '+env.GIT_URL+' --tags')
 	}
