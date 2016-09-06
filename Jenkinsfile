@@ -1,13 +1,14 @@
 
-
+env.GIT_URL="git@github.com:neilhunt1/Dinosaurus-Terraform.git"
 stage 'Provision DEV AWS Stack'
 node("master"){
 	checkout scm
 	sh "terraform plan"
-	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'mykey']]) {
+	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'PEMKEY']]) {
+		
 		sh "ls -lhr"
-		echo env.GIT_BRANCH
-		sh "cat $mykey"
+		echo env.GIT_URL
+		sh "cat $PEMKEY"
 		sh("git tag -a some_tag -m 'Jenkins'")
 		sh('git push '+env.GIT_URL+' --tags')
 	}
