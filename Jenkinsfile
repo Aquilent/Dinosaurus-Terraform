@@ -4,10 +4,6 @@ stage 'Provision DEV AWS Stack'
 node("master"){
 	checkout scm
 	sh "terraform plan"
-	sh 'touch '+env.BUILD_ID+'.txt'
-	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" add '+env.BUILD_ID+'.txt')
-	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" commit -m "Jenkins"')
-	pushGit()
 }
 input "Proceed with plan execution?"
 node("master"){
