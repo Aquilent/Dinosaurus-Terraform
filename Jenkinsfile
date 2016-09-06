@@ -20,7 +20,7 @@ stage 'Provision PROD AWS Stack'{
 }
 
 
-pushGit(){
+def pushGit(){
 	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'PEMKEY']]) {
 		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
 		sh 'chmod 400 ~/.ssh/id_rsa'
