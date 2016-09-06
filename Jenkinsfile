@@ -4,19 +4,26 @@ stage 'Provision DEV AWS Stack'
 node("master"){
 	checkout scm
 	sh "terraform plan"
-	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'PEMKEY']]) {
-		
-		sh "ls -lhr"
-		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
-		sh 'chmod 400 ~/.ssh/id_rsa'
-		echo env.GIT_URL
-		sh('git -c "user.name=Jenkins" -c "user.email=Neil.Hunt@aquilent.com" tag -a Build-'+env.BUILD_ID+' -m "Jenkins"')
-		sh('git -c "user.name=Jenkins" -c "user.email=Neil.Hunt@aquilent.com" push '+env.GIT_URL+' --tags')
-	}
 }
 input "Proceed with plan execution?"
 node("master"){
 	sh "terraform apply"
+	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" add terraform.tfstate')
+	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" commit -m "Jenkins"')
+	pushGit()
+	//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
 }
 
-stage 'Provision PROD AWS Stack'
+stage 'Provision PROD AWS Stack'{
+	node("master"){
+	}
+}
+
+
+pushGit(){
+	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'PEMKEY']]) {
+		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
+		sh 'chmod 400 ~/.ssh/id_rsa'
+		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' --tags')
+	}
+}
