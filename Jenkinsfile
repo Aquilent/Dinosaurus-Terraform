@@ -29,7 +29,7 @@ def pushGit(){
 		sh 'rm -rf ~/.ssh/id_rsa' //make sure it's removed
 		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
 		sh 'chmod 400 ~/.ssh/id_rsa'
-		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' --all')
+		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' origin master')
 		sh 'rm -rf ~/.ssh/id_rsa'
 	}
 }
