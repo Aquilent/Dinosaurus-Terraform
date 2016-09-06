@@ -8,7 +8,9 @@ node("master"){
 		
 		sh "ls -lhr"
 		echo env.GIT_URL
-		sh 'cat $PEMKEY'
+		writeFile file: '~/.gitconfig', text: '''[user]
+        name = Jenkins
+        email = Neil.Hunt@aquilent.com'''
 		sh("git tag -a some_tag -m 'Jenkins'")
 		sh('git push '+env.GIT_URL+' --tags')
 	}
