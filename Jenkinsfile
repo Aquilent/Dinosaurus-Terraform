@@ -4,6 +4,10 @@ stage 'Provision DEV AWS Stack'
 node("master"){
 	checkout scm
 	sh "terraform plan"
+	sh "touch $BUILD_ID.txt"
+	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" add $BUILD_ID.txt')
+	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" commit -m "Jenkins"')
+	pushGit()
 }
 input "Proceed with plan execution?"
 node("master"){
@@ -22,10 +26,10 @@ stage 'Provision PROD AWS Stack'{
 
 def pushGit(){
 	withCredentials([[$class: 'FileBinding', credentialsId: 'dinosauruspem', variable: 'PEMKEY']]) {
-		sh 'rm -rf ~/.ssh/id_rsa'
+		sh 'rm -rf ~/.ssh/id_rsa' //make sure it's removed
 		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
 		sh 'chmod 400 ~/.ssh/id_rsa'
-		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' --tags')
+		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' --all')
 		sh 'rm -rf ~/.ssh/id_rsa'
 	}
 }
