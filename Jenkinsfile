@@ -1,22 +1,21 @@
-
 env.GIT_URL="git@github.com:neilhunt1/Dinosaurus-Terraform.git"
+
 stage 'Provision DEV AWS Stack'
 node("master"){
 	checkout scm
+	sh "aws s3 cp s3://dinosaurus/terraform-env/terraform-dev.tfstate terraform.tfstate"
 	sh "terraform plan"
 }
 input "Proceed with plan execution?"
 node("master"){
 	sh "terraform apply"
-	sh "ls -lhr"
-	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" add terraform.tfstate')
-	sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" commit -m "Jenkins"')
-	pushGit()
-	//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
+	sh "aws s3 cp terraform.tfstate s3://dinosaurus/terraform-env/terraform-dev.tfstate"
 }
 
 stage 'Provision PROD AWS Stack'{
 	node("master"){
+		//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
+		//pushGit()
 	}
 }
 
