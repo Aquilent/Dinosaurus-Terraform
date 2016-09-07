@@ -15,5 +15,6 @@ resource "aws_instance" "example" {
     "Name"         = "CDC Demo Instance"
     "Environment"  = "${var.environment}"
     "Branch"       = "${var.gitbranch}"
+    "Project"      = "Dinosaurus"
   }
 }
