@@ -8,7 +8,7 @@ resource "aws_instance" "example" {
   instance_type = "t2.nano"
   tags {
     "ChargeCode"   = "C3001.002.001"
-    "Name"         = "Neil's instance"
+    "Name"         = "Master instance"
     "Environment"  = "${var.environment}"
   }
 }
