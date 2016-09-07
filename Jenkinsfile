@@ -51,7 +51,8 @@ def pushGit(){
 		sh 'cat $PEMKEY > ~/.ssh/id_rsa'
 		sh 'chmod 400 ~/.ssh/id_rsa'
 		sh 'ls -lhr'
-		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' HEAD:master')
+		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' --tags')
+		//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" push '+env.GIT_URL+' HEAD:master')
 		sh 'rm -rf ~/.ssh/id_rsa'
 	}
 }
