@@ -29,13 +29,15 @@ node("master"){
 	try{
 		sh "aws s3 cp s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate terraform.tfstate"
 	} catch (Exception e) {
-		//if terraform.tfstate isn't found in S3, we can catch this exception and assume it's a new environment
 		echo "terraform.tfstate doesn't exist in S3 branch, this is a new terraform environment"
 	}
-	sh "terraform plan"
+	sh "TF_VAR_environment=Prod terraform plan"
 }
 stage 'Provision PROD AWS Stack'
 node("master"){
+	sh "TF_VAR_environment=Prod terraform apply"
+	sh "aws s3 cp terraform.tfstate s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate"
+	sh "rm -rf terraform.tfstate"
 	//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
 	//pushGit()
 }
