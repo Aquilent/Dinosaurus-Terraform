@@ -13,10 +13,9 @@ node("master"){
 }
 
 stage 'Provision PROD AWS Stack'
-	node("master"){
-		//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
-		//pushGit()
-	}
+node("master"){
+	//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
+	//pushGit()
 }
 
 def pushGit(){
