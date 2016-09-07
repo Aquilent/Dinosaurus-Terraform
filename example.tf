@@ -12,7 +12,7 @@ resource "aws_instance" "example" {
   instance_type = "t2.nano"
   tags {
     "ChargeCode"   = "C3001.002.001"
-    "Name"         = "Master instance"
+    "Name"         = "CDC Demo Instance"
     "Environment"  = "${var.environment}"
     "Branch"       = "${var.gitbranch}"
   }
