@@ -12,8 +12,7 @@ node("master"){
 	}
 	sh "TF_VAR_environment=Dev terraform plan"
 }
-
-input "Proceed with plan execution?"
+input "Proceed with Dev provisioning?"
 
 stage 'Provision DEV AWS Stack'
 node("master"){
@@ -33,13 +32,17 @@ node("master"){
 	}
 	sh "TF_VAR_environment=Prod terraform plan"
 }
+input "Proceed with Prod  provisioning?"
+
 stage 'Provision PROD AWS Stack'
 node("master"){
 	sh "TF_VAR_environment=Prod terraform apply"
 	sh "aws s3 cp terraform.tfstate s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate"
 	sh "rm -rf terraform.tfstate"
-	//sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a '+tagName+' -m "Jenkins"')
-	//pushGit()
+	if(env.BRANCH_NAME=="master"){
+		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a Jenkins-'+env.BUILD_ID+' -m "Jenkins"')
+		pushGit()
+	}
 }
 
 def pushGit(){
