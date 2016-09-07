@@ -1,3 +1,7 @@
+variable "environment" {
+  type        = "string"
+  description = "name of environment level"
+}
 
 resource "aws_instance" "example" {
   ami           = "ami-0d729a60"
@@ -5,6 +9,6 @@ resource "aws_instance" "example" {
   tags {
     "ChargeCode"   = "C3001.002.001"
     "Name"         = "CDC test instance 2"
-    "Environment"  = "Dev"
+    "Environment"  = "${var.environment}"
   }
 }
