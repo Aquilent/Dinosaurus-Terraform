@@ -16,5 +16,6 @@ resource "aws_instance" "example" {
     "Environment"  = "${var.environment}"
     "Branch"       = "${var.gitbranch}"
     "Project"      = "Dinosaurus"
+    "newtag2"      = "new value 2"
   }
 }
