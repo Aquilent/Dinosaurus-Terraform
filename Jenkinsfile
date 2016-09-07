@@ -3,7 +3,11 @@ env.GIT_URL="git@github.com:neilhunt1/Dinosaurus-Terraform.git"
 stage 'Provision DEV AWS Stack'
 node("master"){
 	checkout scm
-	sh "aws s3 cp s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-dev.tfstate terraform.tfstate"
+	try{
+		sh "aws s3 cp s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-dev.tfstate terraform.tfstate"
+	} catch (Exception e) {
+		echo "file doesn't exist, this is a new terraform environment"
+	}
 	sh "terraform plan"
 }
 input "Proceed with plan execution?"
