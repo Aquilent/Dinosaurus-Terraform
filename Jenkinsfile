@@ -10,7 +10,7 @@ node("master"){
 		//if terraform.tfstate isn't found in S3, we can catch this exception and assume it's a new environment
 		echo "terraform.tfstate doesn't exist in S3 branch, this is a new terraform environment"
 	}
-	sh "terraform plan"
+	sh "TF_VAR_environment=Dev terraform plan"
 }
 
 input "Proceed with plan execution?"
