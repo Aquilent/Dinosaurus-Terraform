@@ -10,13 +10,13 @@ node("master"){
 		//if terraform.tfstate isn't found in S3, we can catch this exception and assume it's a new environment
 		echo "terraform.tfstate doesn't exist in S3 branch, this is a new terraform environment"
 	}
-	sh "TF_VAR_environment=Dev TF_VAR_environment="+env.BRANCH_NAME+" terraform plan"
+	sh "TF_VAR_environment=Dev TF_VAR_gitbranch="+env.BRANCH_NAME+" terraform plan"
 }
 input "Proceed with Dev provisioning?"
 
 stage 'Provision DEV AWS Stack'
 node("master"){
-	sh "TF_VAR_environment=Dev TF_VAR_environment="+env.BRANCH_NAME+" terraform apply"
+	sh "TF_VAR_environment=Dev TF_VAR_gitbranch="+env.BRANCH_NAME+" terraform apply"
 	sh "aws s3 cp terraform.tfstate s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-dev.tfstate"
 	sh "rm -rf terraform.tfstate"
 }
@@ -31,13 +31,13 @@ if(env.BRANCH_NAME=="master"){
 		} catch (Exception e) {
 			echo "terraform.tfstate doesn't exist in S3 branch, this is a new terraform environment"
 		}
-		sh "TF_VAR_environment=Prod TF_VAR_environment="+env.BRANCH_NAME+" terraform plan"
+		sh "TF_VAR_environment=Prod TF_VAR_gitbranch="+env.BRANCH_NAME+" terraform plan"
 	}
 	input "Proceed with Prod  provisioning?"
 	
 	stage 'Provision PROD AWS Stack'
 	node("master"){
-		sh "TF_VAR_environment=Prod TF_VAR_environment="+env.BRANCH_NAME+" terraform apply"
+		sh "TF_VAR_environment=Prod TF_VAR_gitbranch="+env.BRANCH_NAME+" terraform apply"
 		sh "aws s3 cp terraform.tfstate s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate"
 		sh "rm -rf terraform.tfstate"
 		if(env.BRANCH_NAME=="master"){
