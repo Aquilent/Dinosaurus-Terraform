@@ -21,27 +21,29 @@ node("master"){
 	sh "rm -rf terraform.tfstate"
 }
 
+if(env.BRANCH_NAME=="master"){
 stage 'Validate Prod AWS Stack'
-node("master"){
-	checkout scm
-	sh "rm -rf terraform.tfstate"
-	try{
-		sh "aws s3 cp s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate terraform.tfstate"
-	} catch (Exception e) {
-		echo "terraform.tfstate doesn't exist in S3 branch, this is a new terraform environment"
+	node("master"){
+		checkout scm
+		sh "rm -rf terraform.tfstate"
+		try{
+			sh "aws s3 cp s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate terraform.tfstate"
+		} catch (Exception e) {
+			echo "terraform.tfstate doesn't exist in S3 branch, this is a new terraform environment"
+		}
+		sh "TF_VAR_environment=Prod terraform plan"
 	}
-	sh "TF_VAR_environment=Prod terraform plan"
-}
-input "Proceed with Prod  provisioning?"
-
-stage 'Provision PROD AWS Stack'
-node("master"){
-	sh "TF_VAR_environment=Prod terraform apply"
-	sh "aws s3 cp terraform.tfstate s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate"
-	sh "rm -rf terraform.tfstate"
-	if(env.BRANCH_NAME=="master"){
-		sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a Jenkins-'+env.BUILD_ID+' -m "Jenkins"')
-		pushGit()
+	input "Proceed with Prod  provisioning?"
+	
+	stage 'Provision PROD AWS Stack'
+	node("master"){
+		sh "TF_VAR_environment=Prod terraform apply"
+		sh "aws s3 cp terraform.tfstate s3://dinosaurus/terraform-env/"+env.BRANCH_NAME+"/terraform-prod.tfstate"
+		sh "rm -rf terraform.tfstate"
+		if(env.BRANCH_NAME=="master"){
+			sh('git -c "user.name=Jenkins" -c "user.email=Jenkins@aquilent.com" tag -a Jenkins-'+env.BUILD_ID+' -m "Jenkins"')
+			pushGit()
+		}
 	}
 }
 
